@@ -1,8 +1,10 @@
 import React from "react";
+import Signup from "./components/Signup";
 
 function App() {
   return (
-    <h1 style={{textAlign: 'center'}}> Hello, World!!</h1>
+    // <h1 style={{textAlign: 'center'}}> Signup</h1>
+    <Signup />
   );
 }
 
