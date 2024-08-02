@@ -1,11 +1,13 @@
-import React from "react";
-import Signup from "./components/Signup";
+import React from 'react';
+import Signup from './components/Signup';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  return (
-    // <h1 style={{textAlign: 'center'}}> Signup</h1>
-    <Signup />
-  );
+    return (
+        <div className="App">
+            <Signup />
+        </div>
+    );
 }
 
 export default App;
