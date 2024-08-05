@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  max-http-request-header-size: 100000000 
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/Practice
+  couchbase:
+    env:
+      io:
+        idle-http-connection-timeout: 4s
+  jpa:
+    hibernate:
+      ddl-auto: none
