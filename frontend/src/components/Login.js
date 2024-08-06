@@ -1,65 +1,47 @@
 import React, { useState } from 'react';
 import { Form, Container, Row, Col, Card, Button, FloatingLabel } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { registerUser } from '../api'; 
+import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../api'; 
 
-function Signup() {
+function Login() {
     const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [validated, setValidated] = useState(false);
     const [msg, setMsg] = useState('');
+    const navigate = useNavigate(); // Initialize the useNavigate hook
 
-    const handleSignUp = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        
+    
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
             e.stopPropagation();
             setValidated(true);
             return;
         }
-        
-        if (password !== confirmPassword) {
-            setMsg("Passwords do not match.");
-            setValidated(true);
-            return;
-        }
-        
-        const signupbody = { email, username, password };
-        
+    
+        const loginBody = { email, password };
+    
         try {
-            const response = await registerUser(signupbody);
+            const response = await loginUser(loginBody);
             if (response.ok) {
-                setMsg("User registered successfully!");
+                setMsg("Login successful!");
                 setTimeout(() => {
-                    handleReset(); 
+                    handleReset();
+                    navigate('/dashboard'); // suppose, Navigate to the dashboard page
                 }, 1000); 
             } else {
                 const responseText = await response.text();
-                if (responseText.includes("email")) {
-                    setMsg("Email already in use.");
-                } else if (responseText.includes("username")) {
-                    setMsg("Username is already taken.");
-                } else {
-                    setMsg("Registration failed: " + responseText);
-                }
+                setMsg("Login failed: " + responseText);
             }
         } catch (error) {
-            setMsg("An error occurred during registration.");
-            setTimeout(() => {
-                handleReset(); 
-            }, 2000); 
+            setMsg("An error occurred during login.");
         }
     };
-    
 
     const handleReset = () => {
         setEmail('');
-        setUsername('');
         setPassword('');
-        setConfirmPassword('');
         setValidated(false);
         setMsg('');
     };
@@ -84,9 +66,9 @@ function Signup() {
                         }}
                     >
                         <Card.Body>
-                            <Card.Title className="text-center mb-4">Register</Card.Title>
+                            <Card.Title className="text-center mb-4">Login</Card.Title>
                             {msg && <div className="alert alert-info">{msg}</div>}
-                            <Form noValidate validated={validated} onSubmit={handleSignUp}>
+                            <Form noValidate validated={validated} onSubmit={handleLogin}>
                                 <FloatingLabel label="Email Address" className="mb-3">
                                     <Form.Control
                                         type="email"
@@ -101,51 +83,23 @@ function Signup() {
                                         Please provide a valid email address.
                                     </Form.Control.Feedback>
                                 </FloatingLabel>
-                                <FloatingLabel label="Username" className="mb-3">
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Username"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        style={{ maxWidth: '400px' }}
-                                        required
-                                        isInvalid={validated && !username}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        Please provide a username.
-                                    </Form.Control.Feedback>
-                                </FloatingLabel>
-                                <FloatingLabel label="Create New Password" className="mb-3">
+                                <FloatingLabel label="Password" className="mb-3">
                                     <Form.Control
                                         type="password"
-                                        placeholder="Create New Password"
+                                        placeholder="Password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         style={{ maxWidth: '400px' }}
                                         required
-                                        isInvalid={validated && (!password || password.length < 6)}
+                                        isInvalid={validated && !password}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {password.length < 6 ? "Password must be at least 6 characters long." : "Please create a password."}
-                                    </Form.Control.Feedback>
-                                </FloatingLabel>
-                                <FloatingLabel label="Confirm New Password" className="mb-3">
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="Confirm New Password"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        style={{ maxWidth: '400px' }}
-                                        required
-                                        isInvalid={validated && (password !== confirmPassword || !confirmPassword)}
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {password !== confirmPassword ? "Passwords do not match." : "Please confirm your password."}
+                                        Please provide a password.
                                     </Form.Control.Feedback>
                                 </FloatingLabel>
                                 <Form.Group className="text-center mb-3">
                                     <Button type="submit" className="btn btn-primary me-2">
-                                        SignUp
+                                        LogIn
                                     </Button>
                                     <Button type="button" onClick={handleReset} className="btn btn-secondary">
                                         Reset
@@ -153,7 +107,7 @@ function Signup() {
                                 </Form.Group>
                             </Form>
                             <div className="text-center mt-3">
-                                <p>Already have an account? <Link to="/login">LogIn</Link></p>
+                                <p>Don't have an account? <Link to="/signup">SignUp</Link></p>
                             </div>
                         </Card.Body>
                     </Card>
@@ -163,4 +117,4 @@ function Signup() {
     );
 }
 
-export default Signup;
+export default Login;

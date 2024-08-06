@@ -1,11 +1,15 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Signup from './components/Signup';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Login from './components/Login';
 
 function App() {
     return (
         <div className="App">
-            <Signup />
+            <Routes>
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
         </div>
     );
 }
